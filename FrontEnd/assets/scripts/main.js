@@ -83,3 +83,51 @@ fetch(categoriesUrl)
 // On récupère la liste des catégories depuis l'API, on crée un bouton pour chacune (plus un bouton fixe 'Tous')
 // et on ajoute à chaque bouton un comportement : au clic, filtrer la liste des travaux déjà en mémoire (allWorks) selon la catégorie choisie, et réafficher seulement ceux-là dans la galerie."
 // ---------------------------------------------------------------------------------
+
+/* Mode édition*/
+
+function checkLoginStatus() {
+    const token = localStorage.getItem("token");
+    
+    return token !== null;
+}
+
+function activateEditMode() {
+    // 1. Bandeau noir "Mode édition"
+    const editBanner = document.createElement("div");
+    editBanner.classList.add("edit-banner");
+    editBanner.innerHTML = `<img src="./assets/icons/edit.png" alt=""> Mode édition`;
+    document.body.prepend(editBanner);
+
+    // 2. Transformer "login" en "logout"
+    const loginLink = document.querySelector('nav ul li a[href="login.html"]');
+    if (loginLink) {
+        loginLink.textContent = "logout";
+        loginLink.href = "#";
+        loginLink.addEventListener("click", (event) => {
+            event.preventDefault();
+            localStorage.removeItem("token");
+            window.location.href = "index.html";
+        });
+    }
+
+    // 3. Cacher les filtres
+    const filters = document.getElementById("filters");
+    if (filters) {
+        filters.style.display = "none";
+    }
+
+    // 4. Afficher un bouton "modifier" à côté de "Mes Projets"
+    const portfolioTitle = document.querySelector("#portfolio h2");
+    if (portfolioTitle) {
+        const editButton = document.createElement("button");
+        editButton.classList.add("edit-mode-btn");
+        editButton.innerHTML = `<img src="./assets/icons/edit.png" alt=""> modifier`;
+        portfolioTitle.insertAdjacentElement("afterend", editButton);
+    }
+}
+
+// Au chargement de la page, on vérifie si l'utilisateur est connecté
+if (checkLoginStatus()) {
+    activateEditMode();
+}
