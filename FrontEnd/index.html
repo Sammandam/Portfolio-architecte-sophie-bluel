@@ -55,6 +55,43 @@
 			<input type="submit" value="Envoyer">
 		</form>
 	</section>
+	<section class="modals" id="modals">
+		<aside id="modal">
+			<span id="close-modal">&times;</span>
+            <p>Galerie photo</p>
+			<div class="modal-content">
+			</div>
+			<div class="modal-footer">
+				<button id="add-photo-btn">Ajouter une photo</button>
+			</div>
+		</aside>
+		<aside id="modal-ajout-photo">
+			<span id="close-modal-2">&times;</span>
+			<span id="back-modal">&larr;</span>
+			
+			<div class="modal-content-ajout">
+				<p>Ajouter une photo</p>
+				<form id="add-photo-form" action="#" method="post" enctype="multipart/form-data">
+					<div class="upload-zone">
+						<input type="file" name="photo" id="photo" accept="image/*" hidden>
+						<img id="preview-img" style="display: none;" alt="Aperçu">
+					    <span class="upload-icon" id="upload-icon">🖼️</span>
+					    <label for="photo" class="upload-btn">+ Ajouter photo</label>
+					    <p class="upload-info">jpg, png : 4mo max</p>
+					</div>
+						<label for="title">Titre</label>
+						<input type="text" name="title" id="title">
+						<label for="category">Catégorie</label>
+						<select name="category" id="category">
+							<option value="">Sélectionner une catégorie</option>
+						</select>
+						<hr>  <!-- la ligne de séparation visuelle -->
+						<button type="submit" id="valider-btn">Valider</button>
+				</form>
+			</div>	
+		</aside> 
+
+	</section>
 </main>
 
 <footer>

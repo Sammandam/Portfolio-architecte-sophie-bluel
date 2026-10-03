@@ -295,3 +295,172 @@ nav img {
 	vertical-align: middle;
 	margin-right: 5px;
 }
+
+/*-------------modale galerie------------------*/
+
+.modals {
+	display: none;
+	color:black;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(255, 255, 255);
+	width: 630px;
+	height: 600px;
+	position: fixed;
+	top:50%;
+	left:50%;
+	transform: translate(-50%, -50%);
+	border-radius: 10px;
+	font-weight: 400;
+	font-size: 26px;
+	
+}
+
+#modal {
+    position: relative;   
+	width: 630px;
+	max-width: 100%;
+	max-height: 100%;
+	padding: 40px;
+	text-align: center;
+}
+
+#close-modal {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	cursor: pointer;
+	color:black
+}
+
+.modal-content {
+	border-bottom: 1px solid #000000;
+	padding: 20px;
+	display: grid;
+	grid-template-columns: repeat(5, 3fr);
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.modal-content figure {
+	position: relative;
+	
+}
+
+.delete-icon {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	font-size: 20px;
+	color: white;
+	background-color: black;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+#add-photo-btn {
+	margin-top: 20px;
+	padding: 10px 20px;
+	background-color: #1D6154;
+	color: white;
+	border: none;
+	border-radius: 20px;
+	cursor: pointer;
+	font-size: 14px;
+}
+
+	
+/*-----------------modal ajout photo------------------*/
+
+#modal-ajout-photo {
+	background-color: rgba(248, 4, 4, 0.952);   
+	width: 630px;
+	max-width: 100%;
+	padding: 40px;
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	border-radius: 10px;
+}
+
+#back-modal {
+	position: absolute;
+	top: 15px;
+	left: 15px;
+	cursor: pointer;
+	color:black
+}
+
+#close-modal-2 {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	cursor: pointer;
+	color:black
+}
+
+.modal-content-ajout {
+	border-bottom: 1px solid #000000;
+	padding: 20px;
+	gap: 10px;
+	align-items: center;
+	justify-content: center;
+}
+
+.upload-zone {
+    background-color: #E8F1F6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    gap: 10px;
+    border-radius: 5px;
+}
+
+#add-photo-form {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.upload-btn {
+    background-color: #CBD6DC;
+    color: #306685;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+#modal-ajout-photo p:first-of-type {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+#add-valider-btn {
+	margin-top: 20px;
+	padding: 10px 20px;
+	background-color: #bbbbbb;
+	border-radius: 20px;
+	color: white;
+	border: none;
+	border-radius: 20px;
+	cursor: pointer;
+	font-size: 14px;
+}
+
+#preview-img {
+	max-width: 100%;
+	max-height: 150px;
+	object-fit: contain;
+	border-radius: 5px;
+}
