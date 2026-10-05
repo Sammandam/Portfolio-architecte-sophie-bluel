@@ -76,17 +76,17 @@
 						<input type="file" name="photo" id="photo" accept="image/*" hidden>
 						<img id="preview-img" style="display: none;" alt="Aperçu">
 					    <span class="upload-icon" id="upload-icon">🖼️</span>
-					    <label for="photo" class="upload-btn">+ Ajouter photo</label>
-					    <p class="upload-info">jpg, png : 4mo max</p>
+					    <label for="photo" class="upload-btn" id="upload-btn">+ Ajouter photo</label>
+					    <p class="upload-info" id="upload-info">jpg, png : 4mo max</p>
 					</div>
 						<label for="title">Titre</label>
 						<input type="text" name="title" id="title">
 						<label for="category">Catégorie</label>
 						<select name="category" id="category">
-							<option value="">Sélectionner une catégorie</option>
+							<option value=""></option>
 						</select>
-						<hr>  <!-- la ligne de séparation visuelle -->
-						<button type="submit" id="valider-btn">Valider</button>
+					    <hr>  <!-- la ligne de séparation visuelle -->
+					    <button type="submit" id="valider-btn">Valider</button>
 				</form>
 			</div>	
 		</aside> 

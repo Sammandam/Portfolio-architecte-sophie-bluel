@@ -305,7 +305,8 @@ nav img {
 	align-items: center;
 	background-color: rgb(255, 255, 255);
 	width: 630px;
-	height: 600px;
+	overflow-y: auto;
+	max-height: 90vh;
 	position: fixed;
 	top:50%;
 	left:50%;
@@ -380,14 +381,19 @@ nav img {
 /*-----------------modal ajout photo------------------*/
 
 #modal-ajout-photo {
-	background-color: rgba(248, 4, 4, 0.952);   
+	background-color: white;
 	width: 630px;
-	max-width: 100%;
+	height: auto;
+	max-height: 90vh;
+	max-width: 90%;
 	padding: 40px;
 	display: none;
 	flex-direction: column;
-	align-items: center;
+	align-items: stretch;
+	align-content: center;
 	border-radius: 10px;
+	box-sizing: border-box;
+	overflow-y: auto;
 }
 
 #back-modal {
@@ -395,7 +401,10 @@ nav img {
 	top: 15px;
 	left: 15px;
 	cursor: pointer;
-	color:black
+	color:black;
+	font-weight: 900;
+	font-size: 28px;
+	
 }
 
 #close-modal-2 {
@@ -406,8 +415,13 @@ nav img {
 	color:black
 }
 
+#modal-ajout-photo p:first-of-type {
+	text-align: center;
+	font-weight: 400;
+	width: 100%; 
+}
+
 .modal-content-ajout {
-	border-bottom: 1px solid #000000;
 	padding: 20px;
 	gap: 10px;
 	align-items: center;
@@ -422,15 +436,20 @@ nav img {
     padding: 30px;
     gap: 10px;
     border-radius: 5px;
+	margin-top: 20px;
+	width: 100%;
+	box-sizing: border-box;
 }
 
 #add-photo-form {
     display: flex;
     flex-direction: column;
     text-align: left;
+	width: 100%;
+	box-sizing: border-box;
 }
 
-.upload-btn {
+#upload-btn {
     background-color: #CBD6DC;
     color: #306685;
     padding: 10px 20px;
@@ -440,27 +459,54 @@ nav img {
     text-decoration: none;
 }
 
-#modal-ajout-photo p:first-of-type {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
+#preview-img { 
+	max-width: 100%;
+	max-height: 150px;
+	object-fit: contain;
+	border-radius: 5px;
 }
 
-#add-valider-btn {
+#upload-info {
+	font-size: 12px;
+	color: black;
+	text-align: center;
+}
+
+#add-photo-form label {
+	font-size: 14px;
+	margin-top: 20px;
+	margin-bottom: 10px;
+	
+}
+
+#add-photo-form input[type="text"],
+#add-photo-form select {
+	border: 1px solid white;
+	border-radius: 3px;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	padding: 8px;
+	font-size: 14px;
+	
+}
+
+hr {
+	border: none;
+	border-bottom: 1px solid #000000;
+	margin: 20px 0;
+}
+
+#valider-btn { 
 	margin-top: 20px;
 	padding: 10px 20px;
 	background-color: #bbbbbb;
 	border-radius: 20px;
 	color: white;
 	border: none;
-	border-radius: 20px;
 	cursor: pointer;
 	font-size: 14px;
+	align-self: center; 
+	width: 200px;
 }
 
-#preview-img {
-	max-width: 100%;
-	max-height: 150px;
-	object-fit: contain;
-	border-radius: 5px;
-}
+
+

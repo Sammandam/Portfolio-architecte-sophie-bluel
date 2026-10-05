@@ -155,35 +155,40 @@ closeModal.addEventListener("click", () => {
     modal.classList.remove("modal");
 });
 
-let hiddenWorkIds = [] // tableau pour stocker les IDs des travaux supprimés //
 function ajouteGalerie() {
-    document.querySelector(".modal-content").innerHTML = ""; // on vide le contenu de la modale avant de l'afficher //
-    allWorks 
-        .filter((work) => !hiddenWorkIds.includes(work.id)) // on filtre les travaux pour ne pas afficher ceux qui ont été supprimés //
-        .forEach((work) => { // on parcourt les travaux filtrés //
+    document.querySelector(".modal-content").innerHTML = "";   
+    allWorks.forEach((work) => {
 
-            const figure = document.createElement("figure"); 
-            const img = document.createElement("img");
-            img.src = work.imageUrl;
-            img.alt = work.title;
-            figure.appendChild(img);
+        const figure = document.createElement("figure");
+        const img = document.createElement("img");
+        img.src = work.imageUrl;
+        img.alt = work.title;
+        figure.appendChild(img);
 
-            const deleteIcon = document.createElement("span");
-            figure.appendChild(deleteIcon);
-            deleteIcon.classList.add("delete-icon");
-            deleteIcon.innerHTML = "&#128465;";
+        const deleteIcon = document.createElement("span");
+        figure.appendChild(deleteIcon);
+        deleteIcon.classList.add("delete-icon");
+        deleteIcon.innerHTML = "&#128465;";
 
-            document.querySelector(".modal-content").appendChild(figure);
+        document.querySelector(".modal-content").appendChild(figure);   
 
-            deleteIcon.addEventListener("click", () => { // on ajoute un écouteur d'événement pour le clic sur l'icône de suppression //
-                hiddenWorkIds.push(work.id); // on ajoute l'ID du travail supprimé au tableau hiddenWorkIds //
-                figure.remove();// on supprime le <figure> correspondant de la modale //
-                displayWorks(allWorks.filter((w) => !hiddenWorkIds.includes(w.id)));  // on met à jour la galerie principale pour ne plus afficher le travail supprimé //        
+        deleteIcon.addEventListener("click", () => {
+            fetch(`http://localhost:5678/api/works/${work.id}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                },
+            })
+            .then((response) => {
+                if (response.ok) {
+                    figure.remove();
+                    allWorks = allWorks.filter((w) => w.id !== work.id);
+                    displayWorks(allWorks);
+                }
+            });
         });
-
-        
     });
-};
+}
 
 /*----------------------------------fenêtre modal ajout photo-----------------------------*/
 
@@ -208,6 +213,18 @@ closeModal2.addEventListener("click", () => {
     addPhotoModal.style.display = "none"; // on ferme la modale ajout photo //
     modal.style.display = "block"; // on revient à la modale galerie photos //
     modals.style.display = "none"; // on ferme la modale galerie photos //
+});
+
+document.addEventListener("click", (event) => { 
+    const isModalOpen = modals.style.display === "flex"; // on vérifie si la modale est ouverte //
+    const clickedInsideModal = modals.contains(event.target); // on vérifie si le clic a eu lieu à l'intérieur de la modale //
+    const clickedEditBtn = event.target === editBtn || event.target.closest("#edit-btn"); // on vérifie si le clic a eu lieu sur le bouton "modifier" ou à l'intérieur de celui-ci //
+
+    if (isModalOpen && !clickedInsideModal && !clickedEditBtn) { // si la modale est ouverte et que le clic a eu lieu à l'extérieur de celle-ci  //
+        modals.style.display = "none"; // on ferme la modale galerie photos //
+        addPhotoModal.style.display = "none"; // on ferme la modale ajout photo //
+        modal.style.display = "block"; // on revient à la modale galerie photos //
+    }
 });
 
 fetch(categoriesUrl) // on récupère les catégories pour le select de la modale ajout photo //
@@ -237,38 +254,68 @@ photoInput.addEventListener("change", () => {
             previewImg.src = e.target.result;
             previewImg.style.display = "block"; // on affiche l'image de prévisualisation //
             document.getElementById("upload-icon").style.display = "none";
+            document.getElementById("upload-btn").style.display = "none";    // ← ajoute
+            document.getElementById("upload-info").style.display = "none";
         }
         reader.readAsDataURL(file);
     }
 });
 
-const addPhotoForm = document.getElementById("add-photo-form");
+const addPhotoForm = document.getElementById("add-photo-form"); // on récupère le formulaire ajout photo //
 
-addPhotoForm.addEventListener("submit", (event) => {
-    event.preventDefault();
+addPhotoForm.addEventListener("submit", (event) => { 
+    event.preventDefault(); // on empêche le rechargement de la page //
+    if (!photoInput.files[0]) { // on vérifie si une photo a été sélectionnée //
+        alert("Veuillez sélectionner une photo.");
+        return;
+    } 
+    if (!document.getElementById("title").value) { // on vérifie si un titre a été saisi //
+        alert("Veuillez saisir un titre.");
+        return;
+    }
+    if (!document.getElementById("category").value) { // on vérifie si une catégorie a été sélectionnée //
+        alert("Veuillez sélectionner une catégorie.");
+        return;
+    }
     
-    const formData = new FormData();
-    formData.append("image", photoInput.files[0]);
-    formData.append("title", document.getElementById("title").value);
-    formData.append("category", document.getElementById("category").value);
+    const formData = new FormData(); // on crée un objet FormData pour envoyer les données du formulaire //
+    formData.append("image", photoInput.files[0]); // on ajoute l'image sélectionnée au FormData //
+    formData.append("title", document.getElementById("title").value); // on ajoute le titre au FormData //
+    formData.append("category", document.getElementById("category").value); // on ajoute la catégorie au FormData //
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token"); // on récupère le token stocké dans le localStorage pour l'authentification //
 
     fetch("http://localhost:5678/api/works", {
-        method: "POST",
-        headers: {
+        method: "POST", // on envoie les données du formulaire au serveur pour ajouter un nouveau travail //
+        headers: { // on ajoute l'en-tête Authorization avec le token pour l'authentification //
             "Authorization": `Bearer ${token}`
         },
-        body: formData
+        body: formData // on envoie le FormData contenant l'image, le titre et la catégorie //
     })
-    .then((response) => response.json())
-    .then((work) => {
-        console.log("Travail ajouté avec succès :", work);
-        // Mettre à jour l'interface utilisateur avec le nouveau travail
+    
+    .then((response) => { // on traite la réponse du serveur //
+        if (!response.ok) { // on vérifie si la réponse est OK, sinon on lance une erreur //
+            throw new Error("Erreur lors de l'ajout du travail"); 
+        }
+        return response.json(); // on convertit la réponse en JSON //
+    })
+    .then((work) => {  // on récupère le travail ajouté dans la réponse du serveur //
+        
+        allWorks.push(work);  // on ajoute le nouveau travail à la liste des travaux en mémoire //
+        displayWorks(allWorks);  // on met à jour la galerie principale pour afficher le nouveau travail //
+        ajouteGalerie(); // on met à jour la galerie de la modale //
+        addPhotoModal.style.display = "none"; // on ferme la modale ajout photo //
+        document.getElementById("add-photo-form").reset(); // on réinitialise le formulaire //
+        document.getElementById("preview-img").style.display = "none"; // on cache l'image de prévisualisation //
+        document.getElementById("upload-icon").style.display = "block"; // on réaffiche l'icône d'upload //
+        document.getElementById("upload-btn").style.display = "block";  // on réaffiche le bouton d'upload //
+        document.getElementById("upload-info").style.display = "block" 
+        modals.style.display = "none"; 
     })
     .catch((error) => {
         console.error("Erreur lors de l'ajout du travail :", error);
     });
 });
+
 
 

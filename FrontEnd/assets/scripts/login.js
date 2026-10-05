@@ -20,7 +20,7 @@ loginForm.addEventListener("submit", (event) => {
             }
             return response.json();
         })
-        .then((data) => {
+        .then((data) => {061
             // Connexion réussie : on stocke le token, puis redirection
             localStorage.setItem("token", data.token);
             window.location.href = "index.html";
