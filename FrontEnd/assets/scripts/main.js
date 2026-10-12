@@ -86,6 +86,7 @@ fetch(categoriesUrl)
 
 /* Mode édition*/
 
+
 function checkLoginStatus() {// on vérifie si l'utilisateur est connecté en regardant si un token est stocké dans le localStorage //
     const token = localStorage.getItem("token");
     
@@ -118,13 +119,25 @@ function activateEditMode() {
     }
 
     // 4. Afficher un bouton "modifier" à côté de "Mes Projets"
-    const portfolioTitle = document.querySelector("#portfolio h2");
-    if (portfolioTitle) {
-        const editButton = document.createElement("button");
-        editButton.classList.add("edit-mode-btn");
-        editButton.innerHTML = `<img src="./assets/icons/edit.png" alt=""> modifier`;
-        portfolioTitle.insertAdjacentElement("afterend", editButton);
-        editButton.id = "edit-btn"; 
+    const portfolioTitle = document.querySelector("#portfolio h2"); // on récupère le titre "Mes Projets" pour y ajouter le bouton "modifier" //
+    if (portfolioTitle) { // on vérifie que le titre existe avant de continuer //
+        const editButton = document.createElement("button"); // on crée le bouton "modifier" //
+        editButton.classList.add("edit-mode-btn"); // on lui ajoute la classe "edit-mode-btn" pour le styliser //
+        editButton.id = "edit-btn"; // on lui ajoute un ID pour pouvoir le récupérer plus tard //
+        editButton.innerHTML = `<img src="./assets/icons/edit.png" alt=""> modifier`; // on lui ajoute le texte "modifier" et l'icône d'édition //
+        
+
+        const portfolioHeader = document.createElement("div"); // on crée un conteneur pour le titre et le bouton //
+        portfolioHeader.classList.add("portfolio-header"); // on lui ajoute la classe "portfolio-header" pour le styliser //
+        portfolioHeader.style.cssText = 
+            "display:flex; justify-content:center; align-items:center; gap:30px; margin-bottom:2em;"; 
+
+        portfolioTitle.style.marginBottom = "0"; 
+        editButton.style.margin = "0"; 
+
+        portfolioTitle.insertAdjacentElement("beforebegin", portfolioHeader);
+        portfolioHeader.appendChild(portfolioTitle); 
+        portfolioHeader.appendChild(editButton);
     }
 }
 
@@ -168,7 +181,7 @@ function ajouteGalerie() {
         const deleteIcon = document.createElement("span");
         figure.appendChild(deleteIcon);
         deleteIcon.classList.add("delete-icon");
-        deleteIcon.innerHTML = "&#128465;";
+        deleteIcon.innerHTML = '<img src="./assets/icons/corbeille.png" alt="supprimer">';
 
         document.querySelector(".modal-content").appendChild(figure);   
 
@@ -176,7 +189,7 @@ function ajouteGalerie() {
             fetch(`http://localhost:5678/api/works/${work.id}`, {
                 method: "DELETE",
                 headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`, 
                 },
             })
             .then((response) => {
@@ -197,6 +210,7 @@ const addPhotoBtn = document.getElementById("add-photo-btn");
 const modal = document.getElementById("modal");
 const backModal = document.getElementById("back-modal");
 const closeModal2 = document.getElementById("close-modal-2");
+
 
 addPhotoBtn.addEventListener("click", () => {
     addPhotoModal.style.display = "flex"; // on ouvre la modale ajout photo //
@@ -244,9 +258,27 @@ fetch(categoriesUrl) // on récupère les catégories pour le select de la modal
 ;
 
 const photoInput = document.getElementById("photo");
+const titleInput = document.getElementById("title");
+const categoryInput = document.getElementById("category");
+const validerBtn = document.getElementById("valider-btn")
 
-photoInput.addEventListener("change", () => {
-    const file = photoInput.files[0];
+// vérifie que les 3 champs sont remplis et change la couleur du bouton
+function checkFormFilled() {
+    const isFilled =
+        photoInput.files.length > 0 &&
+        titleInput.value.trim() !== "" &&
+        categoryInput.value !== "";
+
+    validerBtn.classList.toggle("active", isFilled);
+}
+
+photoInput.addEventListener("change", checkFormFilled);
+titleInput.addEventListener("input", checkFormFilled);
+categoryInput.addEventListener("change", checkFormFilled);
+
+
+photoInput.addEventListener("change", () => { 
+    const file = photoInput.files[0]; 
     if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -257,7 +289,7 @@ photoInput.addEventListener("change", () => {
             document.getElementById("upload-btn").style.display = "none";    // ← ajoute
             document.getElementById("upload-info").style.display = "none";
         }
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(file); 
     }
 });
 
@@ -300,7 +332,7 @@ addPhotoForm.addEventListener("submit", (event) => {
         return response.json(); // on convertit la réponse en JSON //
     })
     .then((work) => {  // on récupère le travail ajouté dans la réponse du serveur //
-        
+        checkFormFilled(); // le bouton repasse en gris après la réinitialisation
         allWorks.push(work);  // on ajoute le nouveau travail à la liste des travaux en mémoire //
         displayWorks(allWorks);  // on met à jour la galerie principale pour afficher le nouveau travail //
         ajouteGalerie(); // on met à jour la galerie de la modale //
@@ -315,6 +347,8 @@ addPhotoForm.addEventListener("submit", (event) => {
     .catch((error) => {
         console.error("Erreur lors de l'ajout du travail :", error);
     });
+
+
 });
 
 

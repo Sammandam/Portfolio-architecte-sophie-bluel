@@ -8,7 +8,7 @@ loginForm.addEventListener("submit", (event) => {
     const password = document.getElementById("password").value;
 
     fetch("http://localhost:5678/api/users/login", {
-        method: "POST",
+        method: "POST", 
         headers: {
             "Content-Type": "application/json",
         },
@@ -20,14 +20,14 @@ loginForm.addEventListener("submit", (event) => {
             }
             return response.json();
         })
-        .then((data) => {061
+        .then((data) => {
             // Connexion réussie : on stocke le token, puis redirection
             localStorage.setItem("token", data.token);
             window.location.href = "index.html";
-        })
+        }) 
         .catch((error) => {
             errorMessage.textContent = "Email ou mot de passe incorrect.";
-            errorMessage.style.display = "block";
+            errorMessage.style.display = "block"; 
         });
 });
 
