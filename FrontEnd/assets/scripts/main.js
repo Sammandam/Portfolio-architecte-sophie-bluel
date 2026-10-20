@@ -271,7 +271,7 @@ fetch(categoriesUrl) // on récupère les catégories pour le select de la modal
     .catch((error) => {
         console.error("Erreur lors de la récupération des catégories :", error);
     });
-;
+
 
 const photoInput = document.getElementById("photo");
 const titleInput = document.getElementById("title");
@@ -357,17 +357,13 @@ addPhotoForm.addEventListener("submit", (event) => {
         return response.json(); // on convertit la réponse en JSON //
     })
     .then((work) => {  // on récupère le travail ajouté dans la réponse du serveur //
-        checkFormFilled(); // le bouton repasse en gris après la réinitialisation
+       
         allWorks.push(work);  // on ajoute le nouveau travail à la liste des travaux en mémoire //
         displayWorks(allWorks);  // on met à jour la galerie principale pour afficher le nouveau travail //
         ajouteGalerie(); // on met à jour la galerie de la modale //
         resetAddPhotoForm();
         addPhotoModal.style.display = "none"; // on ferme la modale ajout photo //
-        document.getElementById("add-photo-form").reset(); // on réinitialise le formulaire //
-        document.getElementById("preview-img").style.display = "none"; // on cache l'image de prévisualisation //
-        document.getElementById("upload-icon").style.display = "block"; // on réaffiche l'icône d'upload //
-        document.getElementById("upload-btn").style.display = "block";  // on réaffiche le bouton d'upload //
-        document.getElementById("upload-info").style.display = "block" 
+        
         modal.style.display = "block";
         modals.style.display = "none"; 
     })
