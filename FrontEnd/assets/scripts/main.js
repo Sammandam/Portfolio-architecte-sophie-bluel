@@ -29,6 +29,14 @@ fetch(worksUrl)
     .then((works) => {
         displayWorks(works);
         allWorks = works; // pour l'etape 3 //
+
+        // la galerie vient de s'afficher : on revient à la section demandée dans l'URL (#contact, #portfolio...)
+        if (window.location.hash) {
+            const target = document.querySelector(window.location.hash);
+            if (target) {
+                target.scrollIntoView();
+            }
+        }
     })
     .catch((error) => console.error(error));
 
@@ -47,6 +55,8 @@ function createFilterButton(label, categoryId) {
     button.textContent = label;
 
     button.addEventListener("click", () => {
+        document.querySelectorAll(".filters button").forEach((b) => b.classList.remove("active"));
+        button.classList.add("active");
         // Filtrage selon la catégorie cliquée
         if (categoryId === "all") {
             displayWorks(allWorks);
@@ -62,8 +72,9 @@ function createFilterButton(label, categoryId) {
 function displayFilters(categories) {// on vide le conteneur de filtres avant d'ajouter les boutons //
     filtersContainer.innerHTML = "";
 
-    // Bouton "Tous" toujours présent en premier
-    filtersContainer.appendChild(createFilterButton("Tous", "all"));
+    const allButton = createFilterButton("Tous", "all");
+    allButton.classList.add("active");
+    filtersContainer.appendChild(allButton);
 
     // Un bouton par catégorie reçue de l'API
     categories.forEach((category) => {
@@ -154,12 +165,14 @@ const editBtn = document.getElementById("edit-btn");
 const closeModal = document.getElementById("close-modal");
 
 //ouvrte la modale au clic sur le bouton "modifier"//
-editBtn.addEventListener("click", () => {
-    modals.style.display = "flex";
-    modals.classList.add("modals");
-    modal.classList.add("modal");
-    ajouteGalerie()// on appelle la fonction pour afficher les travaux dans la modale //
-});
+if (editBtn) {
+    editBtn.addEventListener("click", () => {
+        modals.style.display = "flex";
+        modals.classList.add("modals");
+        modal.classList.add("modal");
+        ajouteGalerie()// on appelle la fonction pour afficher les travaux dans la modale //
+    });
+}
 
 //ferme la modale au clic sur le bouton "X"//
 closeModal.addEventListener("click", () => {
@@ -221,12 +234,14 @@ addPhotoBtn.addEventListener("click", () => {
 backModal.addEventListener("click", () => {
     addPhotoModal.style.display = "none";
     modal.style.display = "block"; // on revient à la modale galerie photos //
+    resetAddPhotoForm();
 });
 
 closeModal2.addEventListener("click", () => {
     addPhotoModal.style.display = "none"; // on ferme la modale ajout photo //
     modal.style.display = "block"; // on revient à la modale galerie photos //
     modals.style.display = "none"; // on ferme la modale galerie photos //
+    resetAddPhotoForm();
 });
 
 document.addEventListener("click", (event) => { 
@@ -238,6 +253,7 @@ document.addEventListener("click", (event) => {
         modals.style.display = "none"; // on ferme la modale galerie photos //
         addPhotoModal.style.display = "none"; // on ferme la modale ajout photo //
         modal.style.display = "block"; // on revient à la modale galerie photos //
+        resetAddPhotoForm();
     }
 });
 
@@ -295,6 +311,15 @@ photoInput.addEventListener("change", () => {
 
 const addPhotoForm = document.getElementById("add-photo-form"); // on récupère le formulaire ajout photo //
 
+function resetAddPhotoForm() { 
+    addPhotoForm.reset();
+    checkFormFilled();
+    document.getElementById("preview-img").style.display = "none"; 
+    document.getElementById("upload-icon").style.display = "block";
+    document.getElementById("upload-btn").style.display = "block";
+    document.getElementById("upload-info").style.display = "block";
+}
+
 addPhotoForm.addEventListener("submit", (event) => { 
     event.preventDefault(); // on empêche le rechargement de la page //
     if (!photoInput.files[0]) { // on vérifie si une photo a été sélectionnée //
@@ -336,12 +361,14 @@ addPhotoForm.addEventListener("submit", (event) => {
         allWorks.push(work);  // on ajoute le nouveau travail à la liste des travaux en mémoire //
         displayWorks(allWorks);  // on met à jour la galerie principale pour afficher le nouveau travail //
         ajouteGalerie(); // on met à jour la galerie de la modale //
+        resetAddPhotoForm();
         addPhotoModal.style.display = "none"; // on ferme la modale ajout photo //
         document.getElementById("add-photo-form").reset(); // on réinitialise le formulaire //
         document.getElementById("preview-img").style.display = "none"; // on cache l'image de prévisualisation //
         document.getElementById("upload-icon").style.display = "block"; // on réaffiche l'icône d'upload //
         document.getElementById("upload-btn").style.display = "block";  // on réaffiche le bouton d'upload //
         document.getElementById("upload-info").style.display = "block" 
+        modal.style.display = "block";
         modals.style.display = "none"; 
     })
     .catch((error) => {
